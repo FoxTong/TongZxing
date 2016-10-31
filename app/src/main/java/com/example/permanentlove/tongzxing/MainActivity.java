@@ -181,21 +181,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //获取扫描结果
 
-        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
-            if (data != null) {
-
-                //解码
-                String content = data.getStringExtra(DECODED_CONTENT_KEY);
-                Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
-
-                btn_jump.setText("解码结果： \n" + content);
-                iv_logo.setImageBitmap(bitmap);
-
-            }
-        }
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode != REQUEST_CODE_SCAN) {
             Uri uri = data.getData();
             ContentResolver cr = this.getContentResolver();
 
@@ -205,18 +192,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            if(requestCode==JUMP_RECORD){
+            if (requestCode == JUMP_RECORD) {
                 scanningImage(bitmap2);
                 iv_logo.setImageBitmap(bitmap2);
             }
-            if(requestCode==LOGO_RECORD){
+            if (requestCode == LOGO_RECORD) {
                 generateLogo(bitmap2);
             }
-            if(requestCode==BG_RECORD){
+            if (requestCode == BG_RECORD) {
                 generateBackground(bitmap2);
             }
+        }
+       else if (resultCode==RESULT_OK&&requestCode == REQUEST_CODE_SCAN) {
+            //获取扫描结果
+            if (data != null) {
+                Toast.makeText(this, "测试", Toast.LENGTH_SHORT).show();
+                //解码
+                String content = data.getStringExtra(DECODED_CONTENT_KEY);
+                Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
 
+                et_link.setText("解码结果： \n" + content);
+                iv_logo.setImageBitmap(bitmap);
 
+            } else {
+                Toast.makeText(this, "扫描失败", Toast.LENGTH_SHORT).show();
+            }
 
         }
         super.onActivityResult(requestCode, resultCode, data);
