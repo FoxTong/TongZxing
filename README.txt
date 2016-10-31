@@ -1,0 +1,2 @@
+# TongZxing
+利用Google的zxing框架实现的二维码扫描与生成
